@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+require "j"
+require "commander/import"
+require "date"
+
+program :name, "j"
+program :version, File.read(File.join(__FILE__),"../version.txt")
+program :description, "Journalling application"
+
+make_item = lambda do |c, type|
+  c.syntax = "j #{type} [--inspiration|--explore] \"Text goes here\""
+  c.option "--inspiration", "Add the inspiration flag."
+  c.option "--explore", "Add the explore flag."
+  c.description = "Add a new #{type} to your journal."
+
+  c.action do |args, opts|
+    en = J::Entry.create do |e|
+      e.body = args[0]
+      e.entry_type = type
+      J::Entry::FLAGS.each do |f|
+        e.add_flag(f) if opts.send(f)
+      end
+    end
+    puts "Entry created: #{en}"
+  end
+end
+
+
+command :note do |c|
+  make_item[c, :note]
+end
+
+command :event do |c|
+  make_item[c,:event]
+end
+
+command :list do |c|
+  c.syntax = "j list"
+  c.description = "List all of today's bullet journal entries."
+
+  c.action do |args|
+    midnight_today = Time.now.to_date
+    entries = Entry.where("created_at > ?", midnight_today)
+    entries.each do |e|
+      puts e
+    end
+  end
+end

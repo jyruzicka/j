@@ -1,0 +1,16 @@
+# INCLUDE bin/**/*
+# INCLUDE lib/**/*
+# INCLUDE *
+# EXCLUDE **/.DS_Store
+# EXCLUDE .rarity
+
+.gitignore
+bin/j
+j.gemspec
+lib/j.rb
+lib/j/database.rb
+lib/j/entry.rb
+lib/j/migrate/1_create_entries.rb
+Manifest
+README.md
+version.txt
