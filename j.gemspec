@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "commander", "~> 4.1.4"
   s.add_runtime_dependency "activerecord", "~> 4.0.0"
   s.add_runtime_dependency "sqlite3", "~> 1.3.8"
+  s.add_runtime_dependency "markdown", "~> 1.1.1"
 end
