@@ -107,7 +107,7 @@ class J::Entry < ActiveRecord::Base
   # Display body as html. If inline is set to true, will remove
   # paragraph markers
   def html_body(inline:false)
-    html_body = Kramdown.new(body).to_html
+    html_body = Kramdown::Document.new(body).to_html
     html_body.gsub!(/<\/?p>/,'') if inline
     html_body
   end
