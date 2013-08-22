@@ -100,7 +100,7 @@ class J::Entry < ActiveRecord::Base
     if entypo
       ENTYPO_SYMBOLS[type]
     else
-      HTML_SYBOLS[type]
+      HTML_SYMBOLS[type]
     end
   end
 
