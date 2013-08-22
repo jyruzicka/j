@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md"]
 
   # Add runtime dependencies here
-  s.add_runtime_dependency "commander", "~> 4.1.4"
-  s.add_runtime_dependency "activerecord", "~> 4.0.0"
-  s.add_runtime_dependency "sqlite3", "~> 1.3.8"
-  s.add_runtime_dependency "markdown", "~> 1.1.1"
+  s.add_runtime_dependency "commander",     "~> 4.1.4"
+  s.add_runtime_dependency "activerecord",  "~> 4.0.0"
+  s.add_runtime_dependency "sqlite3",       "~> 1.3.8"
+  s.add_runtime_dependency "kramdown",      "~> 1.1.0"
 end

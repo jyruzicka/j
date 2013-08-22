@@ -81,7 +81,7 @@ class J::Entry < ActiveRecord::Base
   # the body through markdown before displaying. If you pass
   # :entypo=true, it will use entypo glyphs for flags.
   def to_html(entypo: false)
-    html_flags(entypo:entypo) + " " + html_type(entypo:entypo) + " " + Markdown.new(body).to_html
+    html_flags(entypo:entypo) + " " + html_type(entypo:entypo) + " " + html_body(inline:true)
   end
 
   # Display flags as html. If entypo is set to true,
@@ -102,6 +102,14 @@ class J::Entry < ActiveRecord::Base
     else
       HTML_SYMBOLS[entry_type]
     end
+  end
+
+  # Display body as html. If inline is set to true, will remove
+  # paragraph markers
+  def html_body(inline:false)
+    html_body = Kramdown.new(body).to_html
+    html_body.gsub!(/<\/?p>/,'') if inline
+    html_body
   end
 
   private
