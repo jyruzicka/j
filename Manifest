@@ -6,6 +6,7 @@
 
 .gitignore
 bin/j
+Gemfile
 j.gemspec
 lib/j.rb
 lib/j/database.rb
