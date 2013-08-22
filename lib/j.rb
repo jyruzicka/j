@@ -1,5 +1,6 @@
 require "active_record"
 require "yaml"
+require "kramdown"
 
 module J
   ROOT = File.dirname(File.realpath(__FILE__))
