@@ -98,9 +98,9 @@ class J::Entry < ActiveRecord::Base
   # will use entypo glyphs.
   def html_type(entypo:false)
     if entypo
-      ENTYPO_SYMBOLS[type]
+      ENTYPO_SYMBOLS[entry_type]
     else
-      HTML_SYMBOLS[type]
+      HTML_SYMBOLS[entry_type]
     end
   end
 
