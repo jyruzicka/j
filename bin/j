@@ -4,19 +4,25 @@ require "j"
 require "commander/import"
 require "date"
 
+J::Database::connect
+
 program :name, "j"
-program :version, File.read(File.join(__FILE__),"../version.txt")
+program :version, File.read(File.join(File.dirname(__FILE__),"../version.txt"))
 program :description, "Journalling application"
 
 make_item = lambda do |c, type|
   c.syntax = "j #{type} [--inspiration|--explore] \"Text goes here\""
   c.option "--inspiration", "Add the inspiration flag."
   c.option "--explore", "Add the explore flag."
-  c.description = "Add a new #{type} to your journal."
+  c.description = "Add a new #{type} to your journal. If text is not supplied, will read from stdin."
 
   c.action do |args, opts|
     en = J::Entry.create do |e|
-      e.body = args[0]
+      e.body = if args.empty?
+        $stdin.read
+      else
+        args.shift
+      end
       e.entry_type = type
       J::Entry::FLAGS.each do |f|
         e.add_flag(f) if opts.send(f)
@@ -41,7 +47,7 @@ command :list do |c|
 
   c.action do |args|
     midnight_today = Time.now.to_date
-    entries = Entry.where("created_at > ?", midnight_today)
+    entries = J::Entry.where("created_at > ?", midnight_today)
     entries.each do |e|
       puts e
     end

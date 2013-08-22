@@ -1,11 +1,17 @@
 module J::Database
-  attr_accessor :path
+  
 
   class << self  
-    @path = File.join(ENV['HOME'],".j/db.sqlite3")
+    def path
+      @path ||= File.join(ENV['HOME'],".j/db.sqlite3")
+    end
+
+    def path= p
+      @path = p
+    end
 
     def connect
-      ActiveRecord::Base.establish_connection(adapter:"sqlite3", database:@path)
+      ActiveRecord::Base.establish_connection(adapter:"sqlite3", database:path)
     end
 
     def migrations_folder
