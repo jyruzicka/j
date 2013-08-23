@@ -6,7 +6,7 @@ class J::Entry < ActiveRecord::Base
   # Assorted constants
 
   ENTRY_TYPES = %i(note event)
-  FLAGS = %i(inspiration explore)
+  FLAGS = %i(inspiration explore important)
 
   ENTYPO_SYMBOLS = {
     note: "&#128196;",
@@ -58,20 +58,36 @@ class J::Entry < ActiveRecord::Base
   # Flags and methods
 
 
+  # Retrieve a list of flags as symbols
   def flags
     @flags ||= FLAGS.select{ |f| (int_flags & value_for_flag(f)) != 0 }
   end
 
+  # Add a flag to the entry. Nothing will happen if J
+  # does not recognise this as a flag.
   def add_flag f
     if FLAGS.include?(f)
       update_attribute(:int_flags, int_flags | value_for_flag(f))
     end
   end
 
+  # Remove a flag from the entry. Nothing will happen if J
+  # does not recognise this as a flag
+  def remove_flag f
+    if FLAGS.include?(f)
+      update_attribute(:int_flags, int_flags ^ value_for_flag(f))
+    end
+  end
+
+  # Does this entry have the specified flag?
+  def has_flag? f
+    flags.include?(f)
+  end
+
   # Convert the entry to a string
   def to_s
     flags.map{ |f| TEXT_SYMBOLS[f] }.join("") +
-    TEXT_SYMBOLS(self.entry_type) + 
+    TEXT_SYMBOLS[self.entry_type] + 
     "] " +
     body
   end
