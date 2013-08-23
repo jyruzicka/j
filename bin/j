@@ -46,7 +46,7 @@ command :list do |c|
   c.description = "List all of today's bullet journal entries."
 
   c.action do |args|
-    midnight_today = Time.now.to_date
+    midnight_today = Date.today.to_time.utc
     entries = J::Entry.where("created_at > ?", midnight_today)
     entries.each do |e|
       puts e
