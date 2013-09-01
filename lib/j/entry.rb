@@ -86,6 +86,29 @@ class J::Entry < ActiveRecord::Base
     flags.include?(f)
   end
 
+  #-------------------------------------------------------------------------------
+  # Sticker-related methods
+  #-------------------------------------------------------------------------------
+
+  # Does this entry have this sticker?
+  def has_sticker?(s)
+    stickers.include?(s)
+  end
+
+  # Add a sticker
+  def add_sticker(s)
+    stickers << s
+  end
+
+  # Remove a sticker
+  def remove_sticker(s)
+    stickers.delete(s)
+  end
+
+  #-------------------------------------------------------------------------------
+  # Other functions
+  #-------------------------------------------------------------------------------
+
   # Convert the entry to a string
   def to_s
     flags.map{ |f| TEXT_SYMBOLS[f] }.join("") +

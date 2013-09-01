@@ -41,6 +41,16 @@ make_item = lambda do |c, type|
   end
 end
 
+command :update do |c|
+  c.syntax = "j update"
+  c.description = "Ensure we're running the latest database version."
+
+  c.action do
+    puts "Checking now..."
+    J::Database::ensure_latest_version!
+    puts "Database status checked!"
+  end
+end
 
 command :note do |c|
   make_item[c, :note]
