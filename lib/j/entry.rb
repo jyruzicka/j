@@ -96,13 +96,15 @@ class J::Entry < ActiveRecord::Base
   end
 
   # Add a sticker
-  def add_sticker(s)
+  def add_sticker(s)    
+    s = Sticker.find_or_create_by(name: s) if s.is_a? String
     stickers << s
   end
 
   # Remove a sticker
   def remove_sticker(s)
-    stickers.delete(s)
+    s = Sticker.find_by(name: s) if s.is_a? String
+    stickers.delete(s) if s
   end
 
   #-------------------------------------------------------------------------------
