@@ -3,6 +3,7 @@
 require "j"
 require "commander/import"
 require "date"
+require "tempfile"
 
 J::Database::connect
 
@@ -14,12 +15,20 @@ make_item = lambda do |c, type|
   c.syntax = "j #{type} [--inspiration|--explore] \"Text goes here\""
   c.option "--inspiration", "Add the inspiration flag."
   c.option "--explore", "Add the explore flag."
+  c.option "--visual", "Switch to visual editor to type this up"
   c.description = "Add a new #{type} to your journal. If text is not supplied, will read from stdin."
 
   c.action do |args, opts|
     en = J::Entry.create do |e|
       e.body = if args.empty?
-        $stdin.read
+        if opts.visual
+          t = Tempfile.new("j")
+          t.close
+          `subl -w #{t.path}`
+          File.read(t.path)
+        else
+          $stdin.read
+        end
       else
         args.shift
       end

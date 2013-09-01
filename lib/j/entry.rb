@@ -1,5 +1,7 @@
 class J::Entry < ActiveRecord::Base
 
+  has_and_belongs_to_many :stickers, :join_table => "stickings"
+
   before_save :default_values
 
   #-------------------------------------------------------------------------------
