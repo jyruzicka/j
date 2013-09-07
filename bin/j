@@ -12,9 +12,7 @@ program :version, File.read(File.join(File.dirname(__FILE__),"../version.txt"))
 program :description, "Journalling application"
 
 make_item = lambda do |c, type|
-  c.syntax = "j #{type} [--inspiration|--explore] \"Text goes here\""
-  c.option "--inspiration", "Add the inspiration flag."
-  c.option "--explore", "Add the explore flag."
+  c.syntax = "j #{type} \"Text goes here\""
   c.option "--visual", "Switch to visual editor to type this up"
   c.description = "Add a new #{type} to your journal. If text is not supplied, will read from stdin."
 
@@ -33,11 +31,9 @@ make_item = lambda do |c, type|
         args.shift
       end
       e.entry_type = type
-      J::Entry::FLAGS.each do |f|
-        e.add_flag(f) if opts.send(f)
-      end
+      e.auto_tag!
     end
-    puts "Entry created: #{en}"
+    puts "Entry created:\n#{en}"
   end
 end
 
@@ -60,7 +56,7 @@ command :event do |c|
   make_item[c,:event]
 end
 
-command :list do |c|
+command :today do |c|
   c.syntax = "j list"
   c.description = "List all of today's bullet journal entries."
 
@@ -72,3 +68,5 @@ command :list do |c|
     end
   end
 end
+
+command default: :today

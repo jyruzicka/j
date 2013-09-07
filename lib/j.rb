@@ -8,4 +8,4 @@ end
 
 require "j/database"
 require "j/entry"
-require "j/sticker"
+require "j/tag"

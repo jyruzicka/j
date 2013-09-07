@@ -4,6 +4,10 @@
 
 ## Version history
 
+### 0.3.0
+
+Stickers are now tags. Flags have been removed - you can just use tags for this purpose.
+
 ### 0.2.0
 
 Added stickers!

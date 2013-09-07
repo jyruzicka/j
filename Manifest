@@ -13,7 +13,8 @@ lib/j/database.rb
 lib/j/entry.rb
 lib/j/migrate/1_create_entries.rb
 lib/j/migrate/2_create_stickers.rb
-lib/j/sticker.rb
+lib/j/migrate/3_create_tags.rb
+lib/j/tag.rb
 Manifest
 README.md
 version.txt
