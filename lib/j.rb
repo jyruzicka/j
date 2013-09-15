@@ -6,6 +6,4 @@ module J
   ROOT = File.dirname(File.realpath(__FILE__))
 end
 
-require "j/database"
-require "j/entry"
-require "j/tag"
+%w(database entry tag image).each{ |f| require "j/#{f}" }

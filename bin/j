@@ -87,7 +87,7 @@ command :upload do |c|
       i.name = J::Image.timestamp(name)
     end
 
-    i.create!
+    i.save!
     `echo #{i.path.shellescape} | pbcopy`
     puts "Image uploaded. Path copied to clipboard."
   end

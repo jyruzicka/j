@@ -7,13 +7,16 @@
 .gitignore
 bin/j
 Gemfile
+Gemfile.lock
 j.gemspec
 lib/j.rb
 lib/j/database.rb
 lib/j/entry.rb
+lib/j/image.rb
 lib/j/migrate/1_create_entries.rb
 lib/j/migrate/2_create_stickers.rb
 lib/j/migrate/3_create_tags.rb
+lib/j/migrate/4_create_images.rb
 lib/j/tag.rb
 Manifest
 README.md
