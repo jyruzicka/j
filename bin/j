@@ -69,4 +69,52 @@ command :today do |c|
   end
 end
 
+command :upload do |c|
+  c.syntax = "j upload [--name=NAME] file"
+  c.description = "Upload an image to the J database. Full path of the image will be copied to the clipboard."
+  c.option "--name NAME", String, "Rename the file. Note that j will keep the extension. If this isn't supplied, will use the base name of the file."
+  c.action do |args, opts|
+    file = args.shift
+    unless file
+      $stderr.puts "You must supply a file"
+      exit 1
+    end
+
+    i = J::Image.upload(file)
+
+    if opts.name
+      name = opts.name + File.extname(file)
+      i.name = J::Image.timestamp(name)
+    end
+
+    i.create!
+    `echo #{i.path.shellescape} | pbcopy`
+    puts "Image uploaded. Path copied to clipboard."
+  end
+end
+
+command :image do |c|
+  c.syntax = "j image [--limit=LIM] [N]"
+  c.description = "View the paths of the last LIM images to be uploaded. If the N argument is given, will instead copy the path of this image to the clipboard."
+  c.option "--limit LIM", Integer, "The number of images to examine. Default: 5"
+  c.action do |args,opts|
+    if num = args.shift
+      num = num.to_i
+      if num < 1
+        $stderr.puts "N must be greater than 0"
+        exit 1
+      end
+      i = J::Image.order("created_at DESC")[num-1]
+      `echo #{i.path.shellescape} | pbcopy`
+      puts "Path copied to clipboard: #{i}"
+    else
+      opts.default limit: 5
+      is = J::Image.order("created_at DESC").limit(opts.limit)
+      is.each_with_index do |im, n|
+        puts "#{n+1}) #{im}"
+      end
+    end
+  end
+end
+
 command default: :today
