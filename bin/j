@@ -4,6 +4,7 @@ require "j"
 require "commander/import"
 require "date"
 require "tempfile"
+require "shellwords"
 
 J::Database::connect
 
@@ -13,7 +14,8 @@ program :description, "Journalling application"
 
 make_item = lambda do |c, type|
   c.syntax = "j #{type} \"Text goes here\""
-  c.option "--visual", "Switch to visual editor to type this up"
+  c.option "--visual", "Switch to visual editor to type this up."
+  c.option "--yesterday", "Make an entry for yesterday."
   c.description = "Add a new #{type} to your journal. If text is not supplied, will read from stdin."
 
   c.action do |args, opts|
@@ -32,6 +34,13 @@ make_item = lambda do |c, type|
       end
       e.entry_type = type
       e.auto_tag!
+    end
+    if opts.yesterday
+      now = Time.now
+      yesterday = now - (now.hour*60*60 + now.min*60 + now.sec + 1)
+      en.created_at = yesterday
+      puts "Yday: #{yesterday}"
+      en.save!
     end
     puts "Entry created:\n#{en}"
   end
@@ -69,6 +78,28 @@ command :today do |c|
   end
 end
 
+command :week do |c|
+  c.syntax = "j week"
+  c.description = "List all events this week."
+
+  c.action do
+    today = Date.today
+    monday = today
+    monday -= 1 until monday.monday?
+    monday.upto(today) do |d|
+      puts d.strftime("%A:")
+      midnight_today = d.to_time.utc
+      midnight_tomorrow = (d+1).to_time.utc
+      J::Entry.where(
+        created_at: [midnight_today...midnight_tomorrow],
+        int_type: J::Entry::ENTRY_TYPES.index(:event)
+      ).each do |e|
+        puts "  #{e}"
+      end
+    end
+  end
+end
+
 command :upload do |c|
   c.syntax = "j upload [--name=NAME] file"
   c.description = "Upload an image to the J database. Full path of the image will be copied to the clipboard."
@@ -88,7 +119,7 @@ command :upload do |c|
     end
 
     i.save!
-    `echo #{i.path.shellescape} | pbcopy`
+    `echo -n #{i.path.shellescape} | pbcopy`
     puts "Image uploaded. Path copied to clipboard."
   end
 end
@@ -105,7 +136,7 @@ command :image do |c|
         exit 1
       end
       i = J::Image.order("created_at DESC")[num-1]
-      `echo #{i.path.shellescape} | pbcopy`
+      `echo -n #{i.path.shellescape} | pbcopy`
       puts "Path copied to clipboard: #{i}"
     else
       opts.default limit: 5
