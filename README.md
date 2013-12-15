@@ -4,6 +4,10 @@
 
 ## Version history
 
+### 0.5.1
+
+* Added the `j yesterday` command to the binary.
+
 ### 0.5.0
 
 * New options for the `j event` and `j note` CLI commands: use the `-y`|`--yesterday` flag to make an entry for yesterday!

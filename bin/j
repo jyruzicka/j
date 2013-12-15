@@ -66,12 +66,26 @@ command :event do |c|
 end
 
 command :today do |c|
-  c.syntax = "j list"
+  c.syntax = "j today"
   c.description = "List all of today's bullet journal entries."
 
   c.action do |args|
     midnight_today = Date.today.to_time.utc
     entries = J::Entry.where("created_at > ?", midnight_today)
+    entries.each do |e|
+      puts e
+    end
+  end
+end
+
+command :yesterday do |c|
+  c.syntax = "j yesterday"
+  c.description = "List all of yesterday's bullet journal entries."
+
+  c.action do |args|
+    midnight_today = Date.today.to_time.utc
+    midnight_yesterday = (Date.today - 1).to_time.utc
+    entries = J::Entry.where(created_at: (midnight_yesterday..midnight_today))
     entries.each do |e|
       puts e
     end
